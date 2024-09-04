@@ -1,6 +1,6 @@
 package com.caelestis.loans.controller;
 
-import com.caelestis.loans.contants.LoanConstants;
+import com.caelestis.loans.contants.LoansConstants;
 import com.caelestis.loans.dto.LoansDto;
 import com.caelestis.loans.dto.ResponseDto;
 import com.caelestis.loans.service.ILoansService;
@@ -21,12 +21,24 @@ public class LoansController {
     public ResponseEntity<ResponseDto> createLoans(@RequestBody LoansDto loansDto) {
         iLoansService.createLoans(loansDto);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ResponseDto(LoanConstants.STATUS_201, LoanConstants.MESSAGE_201));
+                .body(new ResponseDto(LoansConstants.STATUS_201, LoansConstants.MESSAGE_201));
     }
 
     @GetMapping("/fetch")
     public ResponseEntity<LoansDto> fetchLoanDetails(@RequestParam String mobileNumber){
         LoansDto loansDto = iLoansService.fetchLoans(mobileNumber);
         return ResponseEntity.status(HttpStatus.OK).body(loansDto);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<ResponseDto> updateLoans(@RequestBody LoansDto loansDto) {
+        boolean isUpdate = iLoansService.updateLoans(loansDto);
+        if (isUpdate) {
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ResponseDto(LoansConstants.STATUS_200, LoansConstants.MESSAGE_200));
+        }else {
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
+                    .body(new ResponseDto(LoansConstants.STATUS_417, LoansConstants.MESSAGE_417_UPDATE));
+        }
     }
 }
