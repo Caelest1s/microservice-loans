@@ -27,15 +27,7 @@ public class LoansServiceImpl implements ILoansService {
             throw new LoanAlreadyExistsException(
                     "Loans already registered with given mobileNumber: " + loansDto.getMobileNumber());
         }
-        insertLoanCreateByAndAt(loans);
         loansRepository.save(loans);
-    }
-
-    private void insertLoanCreateByAndAt(Loans loans) {
-        loans.setCreatedAt(LocalDateTime.now());
-        loans.setCreatedBy("Caelestis");
-        loans.setUpdatedAt(LocalDateTime.now());
-        loans.setUpdatedBy("Caelestis");
     }
 
     @Override

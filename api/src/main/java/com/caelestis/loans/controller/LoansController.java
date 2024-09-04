@@ -31,7 +31,7 @@ public class LoansController {
     @GetMapping("/fetch")
     public ResponseEntity<LoansDto> fetchLoanDetails(
             @RequestParam
-            @Pattern(regexp = "(^$|[0-9]{15})", message = "Mobile number must be 15 digits")
+            @Pattern(regexp = LoansConstants.VALID_MOBILE_NUMBER, message = LoansConstants.ERR_MESSAGE_MOBILE)
             String mobileNumber)
     {
         LoansDto loansDto = iLoansService.fetchLoans(mobileNumber);
@@ -53,7 +53,7 @@ public class LoansController {
     @DeleteMapping("/delete")
     public ResponseEntity<ResponseDto> deleteLoans(
             @RequestParam
-            @Pattern(regexp = "(^$|[0-9]{11})", message = "Mobile number must be 11 digits")
+            @Pattern(regexp = LoansConstants.VALID_MOBILE_NUMBER, message = LoansConstants.ERR_MESSAGE_MOBILE)
             String mobileNumber) {
         boolean isDeleted = iLoansService.deleteLoans(mobileNumber);
         if (isDeleted) {
