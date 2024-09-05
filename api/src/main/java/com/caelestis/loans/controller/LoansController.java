@@ -50,8 +50,12 @@ public class LoansController {
             )
     })
     @PostMapping("/create")
-    public ResponseEntity<ResponseDto> createLoans(@Valid @RequestBody LoansDto loansDto) {
-        iLoansService.createLoans(loansDto);
+    public ResponseEntity<ResponseDto> createLoan(
+            @RequestParam
+            @Pattern(regexp = LoansConstants.VALID_MOBILE_NUMBER, message = LoansConstants.ERR_MESSAGE_MOBILE)
+            String mobileNumber)
+    {
+        iLoansService.createLoan(mobileNumber);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ResponseDto(LoansConstants.STATUS_201, LoansConstants.MESSAGE_201));
     }
@@ -79,7 +83,7 @@ public class LoansController {
             @Pattern(regexp = LoansConstants.VALID_MOBILE_NUMBER, message = LoansConstants.ERR_MESSAGE_MOBILE)
             String mobileNumber)
     {
-        LoansDto loansDto = iLoansService.fetchLoans(mobileNumber);
+        LoansDto loansDto = iLoansService.fetchLoan(mobileNumber);
         return ResponseEntity.status(HttpStatus.OK).body(loansDto);
     }
 
@@ -106,7 +110,7 @@ public class LoansController {
     })
     @PutMapping("/update")
     public ResponseEntity<ResponseDto> updateLoans(@Valid @RequestBody LoansDto loansDto) {
-        boolean isUpdated = iLoansService.updateLoans(loansDto);
+        boolean isUpdated = iLoansService.updateLoan(loansDto);
         if (isUpdated) {
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new ResponseDto(LoansConstants.STATUS_200, LoansConstants.MESSAGE_200));
@@ -138,17 +142,17 @@ public class LoansController {
             )
     })
     @DeleteMapping("/delete")
-    public ResponseEntity<ResponseDto> deleteLoans(
+    public ResponseEntity<ResponseDto> deleteLoan(
             @RequestParam
             @Pattern(regexp = LoansConstants.VALID_MOBILE_NUMBER, message = LoansConstants.ERR_MESSAGE_MOBILE)
             String mobileNumber) {
-        boolean isDeleted = iLoansService.deleteLoans(mobileNumber);
+        boolean isDeleted = iLoansService.deleteLoan(mobileNumber);
         if (isDeleted) {
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseDto(LoansConstants.STATUS_200, LoansConstants.MESSAGE_200));
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ResponseDto(LoansConstants.STATUS_200, LoansConstants.MESSAGE_200));
         }else {
-                return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(
-                        new ResponseDto(LoansConstants.STATUS_417, LoansConstants.MESSAGE_417_DELETE));
+                return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
+                        .body(new ResponseDto(LoansConstants.STATUS_417, LoansConstants.MESSAGE_417_DELETE));
         }
     }
 }

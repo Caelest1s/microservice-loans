@@ -1,5 +1,6 @@
 package com.caelestis.loans.service.impl;
 
+import com.caelestis.loans.contants.LoansConstants;
 import com.caelestis.loans.dto.LoansDto;
 import com.caelestis.loans.entity.Loans;
 import com.caelestis.loans.exception.LoanAlreadyExistsException;
@@ -11,6 +12,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 @AllArgsConstructor
@@ -19,18 +21,32 @@ public class LoansServiceImpl implements ILoansService {
     private LoanRepository loansRepository;
 
     @Override
-    public void createLoans(LoansDto loansDto) {
-        Loans loans = LoansMapper.mapToLoan(loansDto, new Loans());
-        Optional<Loans> optionalLoans = loansRepository.findByMobileNumber(loansDto.getMobileNumber());
+    public void createLoan(String mobileNumber) {
+        Optional<Loans> optionalLoans = loansRepository.findByMobileNumber(mobileNumber);
         if (optionalLoans.isPresent()) {
             throw new LoanAlreadyExistsException(
-                    "Loans already registered with given mobileNumber: " + loansDto.getMobileNumber());
+                    "Loans already registered with given mobileNumber: " + mobileNumber);
         }
-        loansRepository.save(loans);
+        loansRepository.save(createNewLoan(mobileNumber));
+    }
+
+    private Loans createNewLoan(String mobileNumber) {
+        Loans newLoan = new Loans();
+        newLoan.setLoanNumber(newSortedNumber());
+        newLoan.setMobileNumber(mobileNumber);
+        newLoan.setLoanType(LoansConstants.HOME_LOAN);
+        newLoan.setTotalLoan(LoansConstants.NEW_LOAN_LIMIT);
+        newLoan.setAmountPaid(0);
+        newLoan.setOutstandingAmount(LoansConstants.NEW_LOAN_LIMIT);
+        return newLoan;
+    }
+
+    private String newSortedNumber(){
+        return Long.toString(100000000000L + new Random().nextInt(900000000));
     }
 
     @Override
-    public LoansDto fetchLoans(String mobileNumber) {
+    public LoansDto fetchLoan(String mobileNumber) {
         Loans loans = loansRepository.findByMobileNumber(mobileNumber).orElseThrow(
                 () -> new ResourceNotFoundException("Loans", "mobileNumber", mobileNumber)
         );
@@ -38,25 +54,21 @@ public class LoansServiceImpl implements ILoansService {
     }
 
     @Override
-    public boolean updateLoans(LoansDto loansDto) {
-        boolean isUpdated = false;
-        if (loansDto != null) {
-            Loans loans = loansRepository.findByMobileNumber(loansDto.getMobileNumber()).orElseThrow(
-                    () -> new ResourceNotFoundException("Loans", "mobileNumber", loansDto.getMobileNumber())
-            );
+    public boolean updateLoan(LoansDto loansDto) {
+        Loans loans = loansRepository.findByLoanNumber(loansDto.getLoanNumber()).orElseThrow(
+                () -> new ResourceNotFoundException("Loans", "loanNumber", loansDto.getLoanNumber())
+        );
             LoansMapper.mapToLoan(loansDto, loans);
             loansRepository.save(loans);
-            isUpdated = true;
-        }
-        return isUpdated;
+            return true;
     }
 
     @Override
-    public boolean deleteLoans(String mobileNumber) {
+    public boolean deleteLoan(String mobileNumber) {
         Loans loans = loansRepository.findByMobileNumber(mobileNumber).orElseThrow(
                 () -> new ResourceNotFoundException("Loans", "mobileNumber", mobileNumber)
         );
-        loansRepository.delete(loans);
+        loansRepository.deleteById(loans.getLoanId());
         return true;
     }
 }

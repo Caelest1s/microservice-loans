@@ -4,11 +4,11 @@ import com.caelestis.loans.dto.LoansDto;
 
 public interface ILoansService {
 
-    void createLoans(LoansDto loansDto);
+    void createLoan(String mobileNumber);
 
-    LoansDto fetchLoans(String mobileNumber);
+    LoansDto fetchLoan(String mobileNumber);
 
-    boolean updateLoans(LoansDto loansDto);
+    boolean updateLoan(LoansDto loansDto);
 
-    boolean deleteLoans(String mobileNumber);
+    boolean deleteLoan(String mobileNumber);
 }
