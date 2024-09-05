@@ -1,4 +1,4 @@
-package com.caelestis.loans.impl;
+package com.caelestis.loans.service.impl;
 
 import com.caelestis.loans.dto.LoansDto;
 import com.caelestis.loans.entity.Loans;
@@ -10,7 +10,6 @@ import com.caelestis.loans.service.ILoansService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service

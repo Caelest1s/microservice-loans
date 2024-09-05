@@ -15,7 +15,7 @@ public class AuditAwareImpl implements AuditorAware<String> {
      */
 
     @Override
-    public Optional getCurrentAuditor() {
+    public Optional<String> getCurrentAuditor() {
         return Optional.of("LOANS_MICROSERVICE");
     }
 }
