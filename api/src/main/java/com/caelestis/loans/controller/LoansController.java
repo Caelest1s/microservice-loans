@@ -2,6 +2,7 @@ package com.caelestis.loans.controller;
 
 import com.caelestis.loans.contants.LoansConstants;
 import com.caelestis.loans.dto.ErrorResponseDto;
+import com.caelestis.loans.dto.LoansContactInfoDto;
 import com.caelestis.loans.dto.LoansDto;
 import com.caelestis.loans.dto.ResponseDto;
 import com.caelestis.loans.service.ILoansService;
@@ -38,6 +39,9 @@ public class LoansController {
 
     @Value("${build.version}")
     private String buildVersion;
+
+    @Autowired
+    private LoansContactInfoDto loansContactInfoDto;
 
     public LoansController(ILoansService iLoansService) {
         this.iLoansService = iLoansService;
@@ -209,5 +213,27 @@ public class LoansController {
     @GetMapping("/java-version")
     public ResponseEntity<String> getJavaVersion(){
         return ResponseEntity.status(HttpStatus.OK).body(environment.getProperty("JAVA_HOME"));
+    }
+
+    @Operation(
+            summary = "Get Contact Info",
+            description = "Contact Info details that can be reached out in case of any issues"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "HTTP Status OK"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status Internal Server Error",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponseDto.class)
+                    )
+            )
+    })
+    @GetMapping("/contact-info")
+    public ResponseEntity<LoansContactInfoDto> getContactInfo() {
+        return ResponseEntity.status(HttpStatus.OK).body(loansContactInfoDto);
     }
 }
