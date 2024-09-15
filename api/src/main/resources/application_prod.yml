@@ -1,0 +1,16 @@
+spring:
+  config:
+    activate:
+      on-profile: "prod"
+
+build:
+  version: "1.0"
+
+loans:
+  message: "Welcome to Bank loan related prod APIs"
+  contactDetails:
+    name: "Thomas Edison - Product Owner"
+    email: "contato@thomasedison.prod.br"
+  onCallSupport:
+    - (+55) 061 94123-2222
+    - (+55) 061 3322-2211
